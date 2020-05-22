@@ -1,11 +1,23 @@
-import React from 'react';
-import {SafeAreaView, View, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {SafeAreaView, StyleSheet, Animated} from 'react-native';
 
-const App = () => (
-  <SafeAreaView style={style.container}>
-    <View style={style.ball} />
-  </SafeAreaView>
-);
+function App() {
+  const [ballY, setBallY] = useState(new Animated.Value(0));
+
+  useEffect(() => {
+    Animated.timing(ballY, {
+      duration: 1000,
+      toValue: 500,
+      useNativeDriver: false,
+    }).start();
+  }, [ballY]);
+
+  return (
+    <SafeAreaView style={style.container}>
+      <Animated.View style={[style.ball, {top: ballY}]} />
+    </SafeAreaView>
+  );
+}
 
 const style = StyleSheet.create({
   container: {
