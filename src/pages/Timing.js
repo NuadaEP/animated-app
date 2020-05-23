@@ -1,8 +1,9 @@
+import 'react-native-gesture-handler';
 import React, {useEffect, useState} from 'react';
 import {SafeAreaView, StyleSheet, Animated} from 'react-native';
 
-function App() {
-  const [ballY, setBallY] = useState(new Animated.Value(0));
+function Timing() {
+  const [ballY] = useState(new Animated.Value(0));
 
   useEffect(() => {
     Animated.timing(ballY, {
@@ -32,4 +33,4 @@ const style = StyleSheet.create({
   },
 });
 
-export default App;
+export default Timing;
