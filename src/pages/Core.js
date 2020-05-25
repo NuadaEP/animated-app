@@ -64,18 +64,17 @@ export default function Core() {
     ],
   });
 
-  selectUser = (user) => {
-    setState({userSelected: user});
-    setState({userInfoVisible: true});
+  const selectUser = (user) => {
+    setState({...state, userSelected: user, userInfoVisible: true});
   };
 
-  renderDetail = () => (
+  const renderDetail = () => (
     <View>
       <User user={state.userSelected} onPress={() => {}} />
     </View>
   );
 
-  renderList = () => (
+  const renderList = () => (
     <View style={styles.container}>
       <ScrollView>
         {state.users.map((user) => (

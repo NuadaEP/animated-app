@@ -12,6 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function User({user, onPress}) {
+  console.log(user);
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <View style={styles.userContainer}>
