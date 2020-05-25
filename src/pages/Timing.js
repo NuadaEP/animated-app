@@ -1,13 +1,20 @@
 import 'react-native-gesture-handler';
-import React, {useEffect, useState} from 'react';
-import {SafeAreaView, StyleSheet, Animated, View, Text} from 'react-native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Animated,
+  View,
+  Text,
+  Button,
+} from 'react-native';
 
 function Timing() {
   const [ballY] = useState(new Animated.Value(0));
   const [ballYSpring] = useState(new Animated.Value(0));
   const [ballYDecay] = useState(new Animated.Value(0));
 
-  useEffect(() => {
+  const animate = useCallback(() => {
     Animated.timing(ballY, {
       duration: 1000,
       toValue: 500,
@@ -24,10 +31,22 @@ function Timing() {
       velocity: 1,
       useNativeDriver: false,
     }).start();
-  }, [ballY, ballYSpring, ballYDecay]);
+  }, []);
+
+  useEffect(animate, [ballY, ballYSpring, ballYDecay]);
 
   return (
     <SafeAreaView style={style.container}>
+      <Button
+        title="Reset"
+        style={style.button}
+        onPress={() => {
+          ballY.setValue(0);
+          ballYSpring.setValue(0);
+          ballYDecay.setValue(0);
+          animate();
+        }}
+      />
       <View style={style.content}>
         <Text>timing</Text>
         <Text>spring</Text>
@@ -60,6 +79,9 @@ const style = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     backgroundColor: '#f00',
+  },
+  button: {
+    marginBottom: 20,
   },
 });
 

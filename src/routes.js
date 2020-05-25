@@ -12,7 +12,7 @@ export default function Router() {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="Timing" component={Timing} />
+        <Drawer.Screen name="Simple animations" component={Timing} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
