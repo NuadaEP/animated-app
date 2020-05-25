@@ -8,6 +8,7 @@ import Depend from './pages/Depend';
 import Linked from './pages/Linked';
 import Interpolate from './pages/Interpolate';
 import Interact from './pages/Interact';
+import Core from './pages/Core';
 
 export default function Router() {
   const Drawer = createDrawerNavigator();
@@ -21,6 +22,7 @@ export default function Router() {
         <Drawer.Screen name="Linked Animation" component={Linked} />
         <Drawer.Screen name="Interpolate Animation" component={Interpolate} />
         <Drawer.Screen name="Interact Animation" component={Interact} />
+        <Drawer.Screen name="Core" component={Core} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
