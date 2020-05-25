@@ -11,8 +11,6 @@ import {
 
 function Interpolate() {
   const [ballY] = useState(new Animated.Value(0));
-  const [ballYSpring] = useState(new Animated.Value(0));
-  const [ballYDecay] = useState(new Animated.Value(0));
 
   const animate = useCallback(() => {
     Animated.timing(ballY, {
@@ -20,7 +18,7 @@ function Interpolate() {
       toValue: 500,
       useNativeDriver: false,
     }).start();
-  }, []);
+  }, [ballY]);
 
   useEffect(animate, [ballY]);
 
@@ -31,8 +29,6 @@ function Interpolate() {
         style={style.button}
         onPress={() => {
           ballY.setValue(0);
-          ballYSpring.setValue(0);
-          ballYDecay.setValue(0);
           animate();
         }}
       />
