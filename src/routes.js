@@ -6,6 +6,7 @@ import Home from './pages';
 import Timing from './pages/Timing';
 import Depend from './pages/Depend';
 import Linked from './pages/Linked';
+import Interpolate from './pages/Interpolate';
 
 export default function Router() {
   const Drawer = createDrawerNavigator();
@@ -14,9 +15,10 @@ export default function Router() {
     <NavigationContainer>
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={Home} />
-        <Drawer.Screen name="Simple animations" component={Timing} />
-        <Drawer.Screen name="Divide" component={Depend} />
+        <Drawer.Screen name="Simple Animations" component={Timing} />
+        <Drawer.Screen name="Divide Animation" component={Depend} />
         <Drawer.Screen name="Linked Animation" component={Linked} />
+        <Drawer.Screen name="Interpolate Animation" component={Interpolate} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
