@@ -14,9 +14,8 @@ function Depend() {
   const [ballX] = useState(Animated.divide(ballY, 2));
 
   const animate = useCallback(() => {
-    Animated.timing(ballY, {
-      duration: 1000,
-      toValue: 500,
+    Animated.decay(ballY, {
+      velocity: 1,
       useNativeDriver: false,
     }).start();
   }, [ballY]);
@@ -38,9 +37,6 @@ function Depend() {
       </View>
       <View style={style.animatedContent}>
         <Animated.View style={[style.ball, {top: ballY, left: ballX}]} />
-        <Animated.View style={[style.ball, {top: ballY, left: ballX}]} />
-        <Animated.View style={[style.ball, {top: ballY, left: ballX}]} />
-        <Animated.View style={[style.ball, {top: ballY, left: ballX}]} />
       </View>
     </SafeAreaView>
   );
@@ -53,11 +49,9 @@ const style = StyleSheet.create({
   },
   content: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
   },
   animatedContent: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
   },
   ball: {
     width: 70,
