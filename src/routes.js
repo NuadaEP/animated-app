@@ -4,6 +4,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 import Home from './pages';
 import Timing from './pages/Timing';
+import Depend from './pages/Depend';
 
 export default function Router() {
   const Drawer = createDrawerNavigator();
@@ -13,6 +14,7 @@ export default function Router() {
       <Drawer.Navigator initialRouteName="Home">
         <Drawer.Screen name="Home" component={Home} />
         <Drawer.Screen name="Simple animations" component={Timing} />
+        <Drawer.Screen name="Divide" component={Depend} />
       </Drawer.Navigator>
     </NavigationContainer>
   );
