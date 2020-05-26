@@ -18,6 +18,8 @@ export default function User({user, onPress}) {
   const [opacity] = useState(new Animated.Value(0));
 
   const _panResponser = PanResponder.create({
+    onPanResponderTerminationRequest: () => false,
+
     onMoveShouldSetPanResponder: () => true,
 
     onPanResponderMove: Animated.event(
@@ -31,6 +33,22 @@ export default function User({user, onPress}) {
         useNativeDriver: false,
       },
     ),
+
+    onPanResponderRelease: () => {
+      Animated.spring(offset.x, {
+        toValue: 0,
+        bounciness: 10,
+        useNativeDriver: false,
+      }).start();
+    },
+
+    onPanResponderTerminate: () => {
+      Animated.spring(offset.x, {
+        toValue: 0,
+        bounciness: 10,
+        useNativeDriver: false,
+      }).start();
+    },
   });
 
   useEffect(() => {
