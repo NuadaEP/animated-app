@@ -8,6 +8,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Animated,
+  PanResponder,
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -15,6 +16,22 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 export default function User({user, onPress}) {
   const [offset] = useState(new Animated.ValueXY({x: 0, y: 50}));
   const [opacity] = useState(new Animated.Value(0));
+
+  const _panResponser = PanResponder.create({
+    onMoveShouldSetPanResponder: () => true,
+
+    onPanResponderMove: Animated.event(
+      [
+        null,
+        {
+          dx: offset.x,
+        },
+      ],
+      {
+        useNativeDriver: false,
+      },
+    ),
+  });
 
   useEffect(() => {
     Animated.parallel([
@@ -34,6 +51,7 @@ export default function User({user, onPress}) {
 
   return (
     <Animated.View
+      {..._panResponser.panHandlers}
       style={[
         {
           transform: [...offset.getTranslateTransform()],
