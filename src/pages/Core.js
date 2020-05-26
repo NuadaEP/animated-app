@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-
+import React, {useState, useMemo} from 'react';
 import {
   View,
   Image,
@@ -18,10 +17,14 @@ import User from './User';
 const {width} = Dimensions.get('window');
 
 export default function Core() {
-  const [state, setState] = useState({
-    userSelected: null,
-    userInfoVisible: false,
-    users: [
+  const [userSelected, setUserSelected] = useState(null);
+  const [userInfoVisible, setUserInfoVisible] = useState(false);
+
+  const [scrollOffset] = useState(new Animated.Value(0));
+  const [listProgress] = useState(new Animated.Value(0));
+
+  const users = useMemo(
+    () => [
       {
         id: 1,
         name: 'Diego Fernandes',
@@ -63,21 +66,41 @@ export default function Core() {
         color: '#E75A63',
       },
     ],
-  });
-  const [scrollOffset] = useState(new Animated.Value(0));
+    [],
+  );
 
   const selectUser = (user) => {
-    setState({...state, userSelected: user, userInfoVisible: true});
+    setUserSelected(user);
+
+    Animated.timing(listProgress, {
+      toValue: 100,
+      duration: 300,
+    }).start(() => {
+      setUserInfoVisible(true);
+    });
   };
 
   const renderDetail = () => (
     <View>
-      <User user={state.userSelected} onPress={() => {}} />
+      <User user={userSelected} onPress={() => {}} />
     </View>
   );
 
   const renderList = () => (
-    <View style={styles.container}>
+    <Animated.View
+      style={[
+        styles.container,
+        {
+          transform: [
+            {
+              translateX: listProgress.interpolate({
+                inputRange: [0, 100],
+                outputRange: [0, width],
+              }),
+            },
+          ],
+        },
+      ]}>
       <ScrollView
         scrollEventThrottle={16}
         onScroll={Animated.event(
@@ -92,11 +115,11 @@ export default function Core() {
             useNativeDriver: false,
           },
         )}>
-        {state.users.map((user) => (
+        {users.map((user) => (
           <User key={user.id} user={user} onPress={() => selectUser(user)} />
         ))}
       </ScrollView>
-    </View>
+    </Animated.View>
   );
 
   return (
@@ -116,9 +139,7 @@ export default function Core() {
         ]}>
         <Image
           style={styles.headerImage}
-          source={
-            state.userSelected ? {uri: state.userSelected.thumbnail} : null
-          }
+          source={userSelected ? {uri: userSelected.thumbnail} : null}
         />
 
         <Animated.Text
@@ -132,10 +153,10 @@ export default function Core() {
               }),
             },
           ]}>
-          {state.userSelected ? state.userSelected.name : 'GoNative'}
+          {userSelected ? userSelected.name : 'GoNative'}
         </Animated.Text>
       </Animated.View>
-      {state.userInfoVisible ? renderDetail() : renderList()}
+      {userInfoVisible ? renderDetail() : renderList()}
     </View>
   );
 }
