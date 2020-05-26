@@ -37,6 +37,10 @@ export default function User({user, onPress}) {
     ),
 
     onPanResponderRelease: () => {
+      if (offset.x._value < -200) {
+        Alert.alert('Deleted!');
+      }
+
       Animated.spring(offset.x, {
         toValue: 0,
         bounciness: 10,
