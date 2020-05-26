@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
   },
 
   headerText: {
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#FFF',
     backgroundColor: 'transparent',
