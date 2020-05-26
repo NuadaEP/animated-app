@@ -22,6 +22,7 @@ export default function Core() {
 
   const [scrollOffset] = useState(new Animated.Value(0));
   const [listProgress] = useState(new Animated.Value(0));
+  const [userInfoProgress] = useState(new Animated.Value(0));
 
   const users = useMemo(
     () => [
@@ -72,10 +73,19 @@ export default function Core() {
   const selectUser = (user) => {
     setUserSelected(user);
 
-    Animated.timing(listProgress, {
-      toValue: 100,
-      duration: 300,
-    }).start(() => {
+    Animated.sequence([
+      Animated.timing(listProgress, {
+        toValue: 100,
+        duration: 300,
+        useNativeDriver: false,
+      }),
+
+      Animated.timing(userInfoProgress, {
+        toValue: 100,
+        duration: 500,
+        useNativeDriver: false,
+      }),
+    ]).start(() => {
       setUserInfoVisible(true);
     });
   };
@@ -137,8 +147,16 @@ export default function Core() {
             }),
           },
         ]}>
-        <Image
-          style={styles.headerImage}
+        <Animated.Image
+          style={[
+            styles.headerImage,
+            {
+              opacity: userInfoProgress.interpolate({
+                inputRange: [0, 100],
+                outputRange: [0, 1],
+              }),
+            },
+          ]}
           source={userSelected ? {uri: userSelected.thumbnail} : null}
         />
 
