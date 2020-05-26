@@ -17,6 +17,8 @@ export default function User({user, onPress}) {
   const [offset] = useState(new Animated.ValueXY({x: 0, y: 50}));
   const [opacity] = useState(new Animated.Value(0));
 
+  const {width} = Dimensions.get('window');
+
   const _panResponser = PanResponder.create({
     onPanResponderTerminationRequest: () => false,
 
@@ -72,7 +74,16 @@ export default function User({user, onPress}) {
       {..._panResponser.panHandlers}
       style={[
         {
-          transform: [...offset.getTranslateTransform()],
+          transform: [
+            ...offset.getTranslateTransform(),
+            {
+              rotateZ: offset.x.interpolate({
+                inputRange: [width * -1, width],
+                outputRange: ['-50deg', '50deg'],
+                extrapolate: 'clamp',
+              }),
+            },
+          ],
         },
         {
           opacity: opacity,
