@@ -169,9 +169,34 @@ export default function Core() {
                 outputRange: [24, 16],
                 extrapolate: 'clamp',
               }),
+              transform: [
+                {
+                  translateX: userInfoProgress.interpolate({
+                    inputRange: [0, 100],
+                    outputRange: [0, width],
+                  }),
+                },
+              ],
             },
           ]}>
-          {userSelected ? userSelected.name : 'GoNative'}
+          GoNative
+        </Animated.Text>
+
+        <Animated.Text
+          style={[
+            styles.headerText,
+            {
+              transform: [
+                {
+                  translateX: userInfoProgress.interpolate({
+                    inputRange: [0, 100],
+                    outputRange: [width * -1, 0],
+                  }),
+                },
+              ],
+            },
+          ]}>
+          {userSelected ? userSelected.name : null}
         </Animated.Text>
       </Animated.View>
       {userInfoVisible ? renderDetail() : renderList()}
