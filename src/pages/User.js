@@ -36,7 +36,7 @@ export default function User({user, onPress}) {
     <Animated.View
       style={[
         {
-          transform: [{translateY: offset.y}],
+          transform: [...offset.getTranslateTransform()],
         },
         {
           opacity: opacity,

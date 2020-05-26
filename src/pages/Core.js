@@ -10,6 +10,7 @@ import {
   Dimensions,
   ScrollView,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
 
 import User from './User';
@@ -63,6 +64,7 @@ export default function Core() {
       },
     ],
   });
+  const [scrollOffset] = useState(new Animated.Value(0));
 
   const selectUser = (user) => {
     setState({...state, userSelected: user, userInfoVisible: true});
@@ -76,7 +78,20 @@ export default function Core() {
 
   const renderList = () => (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        scrollEventThrottle={16}
+        onScroll={Animated.event(
+          [
+            {
+              nativeEvent: {
+                contentOffset: {y: scrollOffset},
+              },
+            },
+          ],
+          {
+            useNativeDriver: false,
+          },
+        )}>
         {state.users.map((user) => (
           <User key={user.id} user={user} onPress={() => selectUser(user)} />
         ))}
@@ -88,7 +103,17 @@ export default function Core() {
     <View style={styles.container}>
       <StatusBar barStyle="light-content" />
 
-      <View style={styles.header}>
+      <Animated.View
+        style={[
+          styles.header,
+          {
+            height: scrollOffset.interpolate({
+              inputRange: [0, 140],
+              outputRange: [200, 60],
+              extrapolate: 'clamp',
+            }),
+          },
+        ]}>
         <Image
           style={styles.headerImage}
           source={
@@ -96,10 +121,20 @@ export default function Core() {
           }
         />
 
-        <Text style={styles.headerText}>
+        <Animated.Text
+          style={[
+            styles.headerText,
+            {
+              fontSize: scrollOffset.interpolate({
+                inputRange: [120, 140],
+                outputRange: [24, 16],
+                extrapolate: 'clamp',
+              }),
+            },
+          ]}>
           {state.userSelected ? state.userSelected.name : 'GoNative'}
-        </Text>
-      </View>
+        </Animated.Text>
+      </Animated.View>
       {state.userInfoVisible ? renderDetail() : renderList()}
     </View>
   );
@@ -114,7 +149,6 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 40 : 20,
     paddingHorizontal: 15,
     backgroundColor: '#2E93E5',
-    height: 200,
   },
 
   headerImage: {
@@ -122,8 +156,7 @@ const styles = StyleSheet.create({
   },
 
   headerText: {
-    fontSize: 24,
-    fontWeight: '900',
+    fontWeight: 'bold',
     color: '#FFF',
     backgroundColor: 'transparent',
     position: 'absolute',
