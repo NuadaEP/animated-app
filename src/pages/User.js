@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useMemo} from 'react';
 import {
   View,
   Text,
@@ -19,43 +19,45 @@ export default function User({user, onPress}) {
 
   const {width} = Dimensions.get('window');
 
-  const _panResponser = PanResponder.create({
-    onPanResponderTerminationRequest: () => false,
+  const _panResponser = useMemo(() => {
+    PanResponder.create({
+      onPanResponderTerminationRequest: () => false,
 
-    onMoveShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: () => true,
 
-    onPanResponderMove: Animated.event(
-      [
-        null,
+      onPanResponderMove: Animated.event(
+        [
+          null,
+          {
+            dx: offset.x,
+          },
+        ],
         {
-          dx: offset.x,
+          useNativeDriver: false,
         },
-      ],
-      {
-        useNativeDriver: false,
+      ),
+
+      onPanResponderRelease: () => {
+        if (offset.x._value < -200) {
+          Alert.alert('Deleted!');
+        }
+
+        Animated.spring(offset.x, {
+          toValue: 0,
+          bounciness: 10,
+          useNativeDriver: false,
+        }).start();
       },
-    ),
 
-    onPanResponderRelease: () => {
-      if (offset.x._value < -200) {
-        Alert.alert('Deleted!');
-      }
-
-      Animated.spring(offset.x, {
-        toValue: 0,
-        bounciness: 10,
-        useNativeDriver: false,
-      }).start();
-    },
-
-    onPanResponderTerminate: () => {
-      Animated.spring(offset.x, {
-        toValue: 0,
-        bounciness: 10,
-        useNativeDriver: false,
-      }).start();
-    },
-  });
+      onPanResponderTerminate: () => {
+        Animated.spring(offset.x, {
+          toValue: 0,
+          bounciness: 10,
+          useNativeDriver: false,
+        }).start();
+      },
+    });
+  }, [offset.x]);
 
   useEffect(() => {
     Animated.parallel([
@@ -71,7 +73,7 @@ export default function User({user, onPress}) {
         useNativeDriver: false,
       }),
     ]).start();
-  }, []);
+  }, [offset.y, opacity]);
 
   return (
     <Animated.View

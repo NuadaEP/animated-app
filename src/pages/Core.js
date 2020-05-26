@@ -1,14 +1,11 @@
-import React, {useState, useMemo} from 'react';
+import React, {useState, useMemo, useCallback} from 'react';
 import {
   View,
-  Image,
-  Text,
   Platform,
   StatusBar,
   StyleSheet,
   Dimensions,
   ScrollView,
-  TouchableOpacity,
   Animated,
 } from 'react-native';
 
@@ -70,66 +67,75 @@ export default function Core() {
     [],
   );
 
-  const selectUser = (user) => {
-    setUserSelected(user);
+  const selectUser = useCallback(
+    (user) => {
+      setUserSelected(user);
 
-    Animated.sequence([
-      Animated.timing(listProgress, {
-        toValue: 100,
-        duration: 300,
-        useNativeDriver: false,
-      }),
+      Animated.sequence([
+        Animated.timing(listProgress, {
+          toValue: 100,
+          duration: 300,
+          useNativeDriver: false,
+        }),
 
-      Animated.timing(userInfoProgress, {
-        toValue: 100,
-        duration: 500,
-        useNativeDriver: false,
-      }),
-    ]).start(() => {
-      setUserInfoVisible(true);
-    });
-  };
-
-  const renderDetail = () => (
-    <View>
-      <User user={userSelected} onPress={() => {}} />
-    </View>
+        Animated.timing(userInfoProgress, {
+          toValue: 100,
+          duration: 500,
+          useNativeDriver: false,
+        }),
+      ]).start(() => {
+        setUserInfoVisible(true);
+      });
+    },
+    [listProgress, userInfoProgress],
   );
 
-  const renderList = () => (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          transform: [
-            {
-              translateX: listProgress.interpolate({
-                inputRange: [0, 100],
-                outputRange: [0, width],
-              }),
-            },
-          ],
-        },
-      ]}>
-      <ScrollView
-        scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                contentOffset: {y: scrollOffset},
-              },
-            },
-          ],
+  const renderDetail = useCallback(
+    () => (
+      <View>
+        <User user={userSelected} onPress={() => {}} />
+      </View>
+    ),
+    [userSelected],
+  );
+
+  const renderList = useCallback(
+    () => (
+      <Animated.View
+        style={[
+          styles.container,
           {
-            useNativeDriver: false,
+            transform: [
+              {
+                translateX: listProgress.interpolate({
+                  inputRange: [0, 100],
+                  outputRange: [0, width],
+                }),
+              },
+            ],
           },
-        )}>
-        {users.map((user) => (
-          <User key={user.id} user={user} onPress={() => selectUser(user)} />
-        ))}
-      </ScrollView>
-    </Animated.View>
+        ]}>
+        <ScrollView
+          scrollEventThrottle={16}
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: {y: scrollOffset},
+                },
+              },
+            ],
+            {
+              useNativeDriver: false,
+            },
+          )}>
+          {users.map((user) => (
+            <User key={user.id} user={user} onPress={() => selectUser(user)} />
+          ))}
+        </ScrollView>
+      </Animated.View>
+    ),
+    [listProgress, scrollOffset, selectUser, users],
   );
 
   return (
